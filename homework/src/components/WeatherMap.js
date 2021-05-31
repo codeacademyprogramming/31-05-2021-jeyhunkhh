@@ -65,6 +65,7 @@ export const WeatherMap = () => {
 
   return (
     <div className="container mt-5">
+      <h1 className="mb-3">Weather Map</h1>
       <div className="row">
         <div className="col-lg-8">
           <input
@@ -99,7 +100,7 @@ export const WeatherMap = () => {
                     -
                   </button>
                   <p className="mb-0 fs-5">
-                    {cityWeather.name} {tempValue(cityWeather.main.temp)}
+                   <span>{cityWeather.name}</span> {tempValue(cityWeather.main.temp)}
                   </p>
                 </li>
               );

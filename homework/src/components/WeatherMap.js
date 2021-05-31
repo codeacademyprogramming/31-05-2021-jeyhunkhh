@@ -5,6 +5,7 @@ export const WeatherMap = () => {
   const [weatherData, setweatherData] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [tempType, setTempType] = useState("Kelvin");
 
   const handleAddSearch = useCallback(
     async (e) => {
@@ -35,6 +36,32 @@ export const WeatherMap = () => {
   const handleInputChange = useCallback((e) => {
     setSearchValue(e.target.value);
   }, []);
+
+  const changeTempType = useCallback((e) => {
+    setTempType(e.target.value);
+  }, []);
+
+  const tempValue = useCallback(
+    (temp) => {
+      if (tempType === "Celsius") {
+        temp = temp - 273.15;
+        return `${temp > 0 ? "+" : (temp = 0 ? " " : "-")}${temp.toFixed(0)}C`;
+      }
+      if (tempType === "Fahrenheit") {
+        temp = (temp * 9) / 5 - 459.67;
+        return `${temp > 0 ? "+" : (temp = 0 ? " " : "-")}${temp.toFixed(2)}F`;
+      }
+      return `${temp > 0 ? "+" : (temp = 0 ? " " : "-")}${temp.toFixed(2)}K`;
+    },
+    [tempType]
+  );
+
+  const deleteCity = useCallback(
+    (id) => {
+      setweatherData(weatherData.filter(city=>city.id !== id))
+    },
+    [weatherData],
+  )
 
   return (
     <div className="container mt-5">
@@ -67,11 +94,12 @@ export const WeatherMap = () => {
                   <button
                     className="btn btn-outline-secondary me-3"
                     type="button"
+                    onClick={()=>deleteCity(cityWeather.id)}
                   >
                     -
                   </button>
                   <p className="mb-0 fs-5">
-                    {cityWeather.name} +{cityWeather.main.temp}C
+                    {cityWeather.name} {tempValue(cityWeather.main.temp)}
                   </p>
                 </li>
               );
@@ -85,7 +113,9 @@ export const WeatherMap = () => {
               type="radio"
               name="flexRadioDefault"
               id="flexRadioDefault2"
+              value="Kelvin"
               defaultChecked
+              onClick={changeTempType}
             />
             <label className="form-check-label" htmlFor="flexRadioDefault2">
               <strong>Kelvin</strong>
@@ -95,8 +125,10 @@ export const WeatherMap = () => {
             <input
               className="form-check-input"
               type="radio"
+              value="Celsius"
               name="flexRadioDefault"
               id="flexRadioDefault1"
+              onClick={changeTempType}
             />
             <label className="form-check-label" htmlFor="flexRadioDefault1">
               <strong>Celsius</strong>
@@ -106,8 +138,10 @@ export const WeatherMap = () => {
             <input
               className="form-check-input"
               type="radio"
+              value="Fahrenheit"
               name="flexRadioDefault"
               id="flexRadioDefault3"
+              onClick={changeTempType}
             />
             <label className="form-check-label" htmlFor="flexRadioDefault3">
               <strong>Fahrenheit</strong>
